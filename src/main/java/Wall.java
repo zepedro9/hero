@@ -3,21 +3,15 @@ import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
 
-public class Wall {
-    private Position position;
+public class Wall extends Element{
 
     public Wall(int x, int y) {
-        position = new Position(x, y);
+        super(x, y);
     }
 
     public void draw(TextGraphics graphics) {
         graphics.setForegroundColor(TextColor.Factory.fromString("#ffd700"));
         graphics.enableModifiers(SGR.BOLD);
-        graphics.putString(new TerminalPosition(position.getX(), position.getY()), "W");
+        graphics.putString(new TerminalPosition(this.getPosition().getX(), this.getPosition().getY()), "W");
     }
-
-    public Position getPosition() {
-        return position;
-    }
-
 }
