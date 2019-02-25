@@ -46,33 +46,37 @@ public class Game {
         }
     }
 
+    private void moveHero(Position position) {
+        hero.setPosition(position);
+    }
+
     private void processKey(KeyStroke key) throws IOException {
         switch(key.getKeyType()) {
             case ArrowUp:
-                hero.moveUp();
+                moveHero(hero.moveUp());
                 break;
             case ArrowDown:
-                hero.moveDown();
+                moveHero(hero.moveDown());
                 break;
             case ArrowLeft:
-                hero.moveLeft();
+                moveHero(hero.moveLeft());
                 break;
             case ArrowRight:
-                hero.moveRight();
+                moveHero(hero.moveRight());
                 break;
             case Character:
                 switch(key.getCharacter()) {
                     case 'w':
-                        hero.moveUp();
+                        moveHero(hero.moveUp());
                         break;
                     case 's':
-                        hero.moveDown();
+                        moveHero(hero.moveDown());
                         break;
                     case 'a':
-                        hero.moveLeft();
+                        moveHero(hero.moveLeft());
                         break;
                     case 'd':
-                        hero.moveRight();
+                        moveHero(hero.moveRight());
                         break;
                     case 'q':
                         screen.close();
