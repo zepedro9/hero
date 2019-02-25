@@ -10,7 +10,7 @@ import java.io.IOException;
 
 public class Game {
     Screen screen;
-    Hero hero;
+    Arena arena;
 
     private int x = 10;
     private int y = 10;
@@ -28,12 +28,12 @@ public class Game {
             e.printStackTrace();
         }
 
-        hero = new Hero(x, y);
+        arena = new Arena(20, 20, 10, 10);
     }
 
     private void draw() throws IOException {
         screen.clear();
-        hero.draw(screen);
+        arena.draw(screen);
         screen.refresh();
     }
 
@@ -47,36 +47,38 @@ public class Game {
     }
 
     private void moveHero(Position position) {
-        hero.setPosition(position);
+        if (arena.canHeroMove(position)) {
+            arena.getHero().setPosition(position);
+        }
     }
 
     private void processKey(KeyStroke key) throws IOException {
         switch(key.getKeyType()) {
             case ArrowUp:
-                moveHero(hero.moveUp());
+                moveHero(arena.getHero().moveUp());
                 break;
             case ArrowDown:
-                moveHero(hero.moveDown());
+                moveHero(arena.getHero().moveDown());
                 break;
             case ArrowLeft:
-                moveHero(hero.moveLeft());
+                moveHero(arena.getHero().moveLeft());
                 break;
             case ArrowRight:
-                moveHero(hero.moveRight());
+                moveHero(arena.getHero().moveRight());
                 break;
             case Character:
                 switch(key.getCharacter()) {
                     case 'w':
-                        moveHero(hero.moveUp());
+                        moveHero(arena.getHero().moveUp());
                         break;
                     case 's':
-                        moveHero(hero.moveDown());
+                        moveHero(arena.getHero().moveDown());
                         break;
                     case 'a':
-                        moveHero(hero.moveLeft());
+                        moveHero(arena.getHero().moveLeft());
                         break;
                     case 'd':
-                        moveHero(hero.moveRight());
+                        moveHero(arena.getHero().moveRight());
                         break;
                     case 'q':
                         screen.close();
