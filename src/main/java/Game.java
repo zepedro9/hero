@@ -1,3 +1,7 @@
+import com.googlecode.lanterna.SGR;
+import com.googlecode.lanterna.TerminalPosition;
+import com.googlecode.lanterna.TextColor;
+import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;
@@ -6,6 +10,8 @@ import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Game {
     Screen screen;
@@ -13,6 +19,7 @@ public class Game {
 
     private int x = 10;
     private int y = 10;
+    private int coinsCollected = 0;
 
     public Game() {
         try {
@@ -32,7 +39,13 @@ public class Game {
 
     private void draw() throws IOException {
         screen.clear();
-        arena.draw(screen.newTextGraphics());
+        TextGraphics graphics = screen.newTextGraphics();
+        arena.draw(graphics);
+        graphics.setForegroundColor(TextColor.Factory.fromString("#EEEEEE"));
+        graphics.setBackgroundColor(TextColor.Factory.fromString("#000000"));
+        graphics.putString(new TerminalPosition(25, 3), "Coins: ");
+        graphics.setForegroundColor(TextColor.Factory.fromString("#f89406"));
+        graphics.putString(new TerminalPosition(32, 3), coinsCollected + "");
         screen.refresh();
     }
 
@@ -47,8 +60,18 @@ public class Game {
 
     private void moveHero(Position position) {
         if (arena.canHeroMove(position)) {
+            if (arena.isCoin(position)) retrieveCoins(position);
             arena.getHero().setPosition(position);
         }
+    }
+
+    private void retrieveCoins(Position pos) {
+        List<Coin> newCoins = new ArrayList<>();
+        for (Coin coin : arena.getCoins()) {
+            if (!coin.getPosition().equals(pos)) newCoins.add(coin);
+            else coinsCollected++;
+        }
+        arena.setCoins(newCoins);
     }
 
     private void processKey(KeyStroke key) throws IOException {

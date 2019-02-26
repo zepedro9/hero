@@ -5,6 +5,7 @@ import com.googlecode.lanterna.graphics.TextGraphics;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Arena {
     private int width;
@@ -12,12 +13,14 @@ public class Arena {
 
     private Hero hero;
     private List<Wall> walls;
+    private List<Coin> coins;
 
     public Arena(int w, int h, int hx, int hy) {
         width = w;
         height = h;
         hero = new Hero(hx, hy);
         this.walls = createWalls();
+        this.coins = createCoins();
     }
 
     public void draw(TextGraphics graphics) {
@@ -28,6 +31,8 @@ public class Arena {
         hero.draw(graphics);
         for (Wall wall : walls)
             wall.draw(graphics);
+        for (Coin coin : coins)
+            coin.draw(graphics);
     }
 
     public Hero getHero() {
@@ -39,13 +44,34 @@ public class Arena {
         else return false;
     }
 
-    private boolean isNotWall(Position position) {
+    public boolean isNotWall(Position position) {
         boolean isNotWall = true;
         for (Wall wall : walls) {
             isNotWall = !position.equals(wall.getPosition());
             if(!isNotWall) break;
         }
         return isNotWall;
+    }
+
+    public boolean isHero(Position position) {
+        return position.equals(hero.getPosition());
+    }
+
+    public boolean isCoin(Position position) {
+        boolean isCoin = false;
+        for (Coin coin : coins) {
+            isCoin = position.equals(coin.getPosition());
+            if(isCoin) break;
+        }
+        return isCoin;
+    }
+
+    public List<Coin> getCoins() {
+        return coins;
+    }
+
+    public void setCoins(List<Coin> newCoins) {
+        coins = newCoins;
     }
 
     private List<Wall> createWalls() {
@@ -62,5 +88,20 @@ public class Arena {
         }
 
         return walls;
+    }
+
+    private List<Coin> createCoins() {
+        Random random = new Random();
+        ArrayList<Coin> coins = new ArrayList<>();
+        int x, y;
+        Position temp;
+        for (int i = 0; i < 8; i++) {
+            x = random.nextInt(width - 2) + 1;
+            y = random.nextInt(height - 2) + 1;
+            temp = new Position(x, y);
+            if (!isHero(temp) && isNotWall(temp)) coins.add(new Coin(temp));
+            else i--;
+        }
+        return coins;
     }
 }
